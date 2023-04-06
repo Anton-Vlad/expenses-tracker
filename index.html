@@ -22,9 +22,9 @@
         
         <main>
 
-            <section id="login-card">
-                <div class="card" style="width: 18rem;">
-                    <div class="card-header">
+            <section id="login-section" style="display: none;">
+                <div class="card">
+                    <div class="card-header m-0">
                         <h4 class="card-title">Login</h4>
                     </div>
                     <div class="card-body">
@@ -35,20 +35,118 @@
                 </div>
             </section>
 
-            <section id="welcome-user">
-                <div class="card" style="width: 18rem;">
+            <section id="welcome-section" style="display: none;">
+                <div class="card">
                     <div class="card-header">
-                        <h4 class="card-title">
+                        <h4 class="card-title m-0">
                             Welcome <span id="user-name"></span>
                         </h4>
                     </div>
                     <div class="card-body">
-                        <button id="addAnExpens" type="button" class="btn btn-primary">
-                            Add an expens
-                        </button>
-                        <button id="logout" type="button" class="btn btn-danger">
-                            Log out
-                        </button>
+
+                        <div class="btn-group w-100" role="group" aria-label="Basic example">
+                            <button id="addAnExpens" type="button" class="btn btn-primary">
+                                Form
+                            </button>
+                            <button id="showTableExpenses" type="button" class="btn btn-success">
+                                Table
+                            </button>
+                            <button type="button" class="btn btn-success">
+                                Graph
+                            </button>
+                            <button id="logout" type="button" class="btn btn-danger">
+                                Logout
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+
+            <section id="expenses-form-tab" class="mt-5" style="display: none;">
+                <div class="card">
+                    <div class="card-header">
+                        <h4 class="card-title m-0">
+                            Expenses Form
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="expenses-form" class="row">
+                          
+                            <div class="col-12">
+                                <div class=" form-floating mb-3">
+                                    <input type="number" class="form-control" id="expens-value" placeholder="How much?" step="0.01" min="0">
+                                    <label for="expens-value">Expens value:</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class=" form-floating mb-3">
+                                    <input type="text" class="form-control" id="expens-location" placeholder="Where?">
+                                    <label for="expens-location">Expens location:</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class=" form-floating mb-3">
+                                    <input type="date" class="form-control" id="expens-date" placeholder="dd-mm-yyyy" value="" min="1997-01-01" max="2030-12-31">
+                                    <label for="expens-date">Expens date:</label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class=" mb-3">
+                                    <select class="form-select" id="expens-tag" aria-label="Default select example">
+                                        <option selected>Expens Tag:</option>
+                                        <option value="Consumabile">Consumabile</option>
+                                        <option value="Medicale">Medicale</option>
+                                        <option value="Transport">Transport</option>
+                                        <option value="Casa">Casa</option>
+                                        <option value="Abonamente">Abonamente</option>
+                                        <option value="Dorinte">Dorinte</option>
+                                        <option value="Necunoscut">Necunoscut</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="form-floating">
+                                    <textarea class="form-control" placeholder="Leave a comment here" id="expxens-details"></textarea>
+                                    <label for="expxens-details">Extra details</label>
+                                </div>
+                            </div>
+                            <div class="col-12 mt-4">
+                                <button type="submit" class="btn btn-primary d-block w-100">Add expens</button>
+                            </div>
+                            
+                        </form>
+                    </div>
+                </div>
+            </section>
+
+            <section id="expenses-table-tab" class="mt-5" style="display: none;">
+                <div class="card ">
+                    <div class="card-header">
+                        <h4 class="card-title m-0">
+                            Period: <span id="period-span" class="fs-5 fw-bold"></span>
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-hover">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th scope="col">Date</th>
+                                                <th scope="col">Location</th>
+                                                <th scope="col">Tag</th>
+                                                <th scope="col">Value</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="expenses-table-rows">
+                                            
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -60,11 +158,12 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
     <script >
         const firebaseConfig = {
             apiKey: "AIzaSyDQ5VyNKfYsodAUJZ9iv7oDYMfWIJkabag",
             authDomain: "expenses-tracker-app-eb494.firebaseapp.com",
-            // databaseURL: "https://coin-collector-app-default-rtdb.firebaseio.com",
+            databaseURL: "https://expenses-tracker-app-eb494-default-rtdb.europe-west1.firebasedatabase.app",
             projectId: "expenses-tracker-app-eb494",
             storageBucket: "expenses-tracker-app-eb494.appspot.com",
             messagingSenderId: "383571408692",
@@ -73,6 +172,7 @@
     
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
     </script>
 
 
